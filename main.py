@@ -34,21 +34,21 @@ def click():
     if flag1 == 1 and flag2 == 1:  # if both paths are valid
 
         dataFiles = os.listdir(datatext)  # list all files in this path in dataFiles variable
-        print(dataFiles)
+        # print(dataFiles)
         referenceFiles = os.listdir(referencetext)
-        print(referenceFiles)
+        # print(referenceFiles)
 
         count = 0 # num of excel files in path
-        count2 = len(dataFiles)
+        count2 = len(dataFiles) # num of files in path
         j = 0
         substring = 'xlsx'
-        arr = [] # the indexes of excel files
+        arr = [] # the index of excel files
 
         # loop to get the excel files index
         while count2 > 0:
 
             if substring in dataFiles[j]:
-                print(dataFiles[j])
+                # print(dataFiles[j])
                 arr.append(j)
                 count = count + 1
             count2 = count2 - 1
@@ -59,7 +59,7 @@ def click():
 
 
         i = 0
-        print(count)
+        # print(count)
 
         while count > 0:
 
@@ -116,6 +116,8 @@ dataText.grid(row=2, column=1, sticky=W)
 Label(window, text="Reference:").grid(row=3, column=0, sticky=W)
 referenceText = Entry(window, width=50)
 referenceText.grid(row=3, column=1, sticky=W)
+
+Label(window, text="This app works only if both ref and build folder has the same structure!").grid(row=6, column=1, sticky=W)
 
 Button(window, text="Start", width=6, command=click).grid(row=6, column=0, sticky=W)
 
