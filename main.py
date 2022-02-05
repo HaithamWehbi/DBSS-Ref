@@ -5,18 +5,16 @@ from openpyxl import workbook, load_workbook
 from openpyxl.utils import get_column_letter
 
 
-
-
 def click():
-    datatext = dataText.get()   #edit text for data path
-    referencetext = referenceText.get()     #edit text for ref path
+    datatext = dataText.get()  # edit text for data path
+    referencetext = referenceText.get()  # edit text for ref path
     flag1 = 0
     flag2 = 0
 
     if datatext == "" or referencetext == "":
-        l1 = Label(window, text="Paths are empty.                                          ").grid(row=4, column=1, sticky=W)
+        l1 = Label(window, text="Paths are empty.                                          ").grid(row=4, column=1,
+                                                                                                   sticky=W)
         return
-
 
     if Path(datatext).is_dir() == True:
         flag1 = 1
@@ -33,46 +31,60 @@ def click():
         l3 = Label(window, text="Windows cannot access the specified path.", bg='red').grid(row=4, column=1, sticky=W)
         return
 
-    if flag1 == 1 and flag2 == 1:       #if both paths are valid
+    if flag1 == 1 and flag2 == 1:  # if both paths are valid
 
-        dataFiles = os.listdir(datatext) # list all files in this path in dataFiles variable
+        dataFiles = os.listdir(datatext)  # list all files in this path in dataFiles variable
         print(dataFiles)
         referenceFiles = os.listdir(referencetext)
         print(referenceFiles)
 
+        count = 0 # num of excel files in path
+        count2 = len(dataFiles)
+        j = 0
+        substring = 'xlsx'
+        arr = [] # the indexes of excel files
 
-        count = len(dataFiles) # excel files count
-        i = 0 #files index
+        # loop to get the excel files index
+        while count2 > 0:
+
+            if substring in dataFiles[j]:
+                print(dataFiles[j])
+                arr.append(j)
+                count = count + 1
+            count2 = count2 - 1
+            j = j + 1
+
+
+
+
+
+        i = 0
         print(count)
-        print(i)
-
-
-
 
         while count > 0:
 
-            #######put file name + path in one var########
+            # ###### put file name + path in one var########
             temp = '\\'
             filepath = datatext + temp
             refpath = referencetext + temp
 
-            filepath = filepath + dataFiles[i]
-            refpath = refpath + referenceFiles[i]
+            filepath = filepath + dataFiles[arr[i]]
+            refpath = refpath + referenceFiles[arr[i]]
 
-            #######copy and paste from ref to build#######
+            # ######copy and paste from ref to build#######
             buildworkbook = load_workbook(filepath)
             refworkbook = load_workbook(refpath)
             buildworksheet = buildworkbook.worksheets[1]
             refworksheet = refworkbook.worksheets[0]
 
-            #####frist matrix#####
+            # ####frist matrix#####
             for row in range(2, 7):
                 for col in range(1, 3):
                     char = get_column_letter(col)
                     val = refworksheet[char + str(row)].value
                     buildworksheet[char + str(row)] = val
 
-            #####second matrix#####
+            # ####second matrix#####
             for row2 in range(2, 8):
                 for col2 in range(6, 10):
                     char2 = get_column_letter(col2)
@@ -82,27 +94,20 @@ def click():
             count = count - 1
             i = i + 1
 
-
             buildworkbook.save(filepath)
             refworkbook.close()
             buildworkbook.close()
 
+        l4 = Label(window, text="Done.                                                                          ",
+                   bg='green').grid(row=4, column=1, sticky=W)
 
 
-
-
-        l4 = Label(window, text="Done.                                                                          ", bg='green').grid(row=4, column=1, sticky=W)
-
-
-
-
-#######   UI   #######
+# ######   UI   #######
 window = Tk()
 window.title("DBSS Ref")
 window.geometry('600x150')
 
 Label(window, text="DBSS Reference", fg="blue", font="none 12 bold").grid(row=1, column=0, sticky=W)
-
 
 Label(window, text="Build:").grid(row=2, column=0, sticky=W)
 dataText = Entry(window, width=50)
